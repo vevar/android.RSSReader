@@ -4,9 +4,9 @@ import java.net.URL;
 
 final public class SourceNews {
 
-    private static final String ID = "_id";
-    private static final String TITLE = "title";
-    private static final String URL = "url";
+    public static final String ID = "_id";
+    public static final String TITLE = "title";
+    public static final String URL = "url";
 
     final private int id;
     final private String title;
