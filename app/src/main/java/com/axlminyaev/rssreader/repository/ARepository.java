@@ -1,4 +1,4 @@
-package com.axlminyaev.rssreader.dao;
+package com.axlminyaev.rssreader.repository;
 
 import android.database.Cursor;
 

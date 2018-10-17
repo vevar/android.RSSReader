@@ -1,0 +1,41 @@
+package com.axlminyaev.rssreader.engine;
+
+import android.support.annotation.Nullable;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+final public class HttpHandler {
+
+    @Nullable
+    public static String GetHTTPData(final URL url) throws IOException {
+        final HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+        String result = null;
+
+        if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+            result = getDataFromInputStream(urlConnection.getInputStream());
+        }
+
+        return result;
+    }
+
+    private static String getDataFromInputStream(InputStream inputStream) throws IOException {
+        final BufferedReader bufferedReaderData = new BufferedReader(
+                new InputStreamReader(
+                        inputStream
+                ));
+
+        final StringBuilder stringBuilderData = new StringBuilder();
+
+        String line;
+        while ((line = bufferedReaderData.readLine()) != null) {
+            stringBuilderData.append(line);
+        }
+
+        return stringBuilderData.toString();
+    }
+}

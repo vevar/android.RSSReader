@@ -1,4 +1,6 @@
-package com.axlminyaev.rssreader.dao;
+package com.axlminyaev.rssreader.repository;
+
+import java.util.List;
 
 interface IRepository <T>{
 
@@ -7,4 +9,6 @@ interface IRepository <T>{
     void remove(int id);
 
     T getById(int id);
+
+    List<T> getAll();
 }

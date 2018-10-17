@@ -5,7 +5,8 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
-import com.axlminyaev.rssreader.model.SourceNews;
+import com.axlminyaev.rssreader.repository.RepositoryManager;
+import com.axlminyaev.rssreader.repository.model.SourceNews;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,12 +16,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-final public class NewsLoader extends Service {
+final public class NewsService extends Service {
 
     final private List<SourceNews> listLoadedURL;
     final private Date dateLastCheck;
 
-    public NewsLoader(){
+    public NewsService(){
         listLoadedURL = new ArrayList<>();
         dateLastCheck = Calendar.getInstance().getTime();
     }
@@ -33,17 +34,14 @@ final public class NewsLoader extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        super.onStartCommand(intent, flags, startId);
-
-        return ;
+        return super.onStartCommand(intent, flags, startId);
     }
 
     public void addSourceNews(SourceNews sourceNews){
-        listLoadedURL.add(sourceNews.getId(), sourceNews);
     }
 
     public void removeSourceNews(int id){
-        listLoadedURL.remove(id);
+        RepositoryManager.getSourceNewsRepository().remove(id);
     }
 
     private InputStream getInputStream(URL url) throws IOException {
