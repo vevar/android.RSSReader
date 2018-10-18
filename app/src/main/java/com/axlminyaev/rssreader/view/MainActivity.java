@@ -5,10 +5,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.ListView;
 
 import com.axlminyaev.rssreader.R;
-import com.axlminyaev.rssreader.repository.model.News;
 import com.axlminyaev.rssreader.service.NewsReaderService;
 
-import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 final public class MainActivity extends AppCompatActivity {
 
@@ -24,12 +23,19 @@ final public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        List<News> allNews = new NewsReaderService().getAllNews();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+
+        try {
+            new NewsReaderService().loadRssNews();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

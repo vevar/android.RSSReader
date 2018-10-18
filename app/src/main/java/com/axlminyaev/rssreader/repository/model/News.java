@@ -31,6 +31,14 @@ final public class News {
 
     }
 
+    public News(String title, String description, URL url, URL urlImage, Date pubDate) {
+        this.title = title;
+        this.description = description;
+        this.url = url;
+        this.urlImage = urlImage;
+        this.pubDate = pubDate;
+    }
+
     public News(int id, String title, String description, URL url, URL urlImage, Date pubDate) {
         this.id = id;
         this.title = title;

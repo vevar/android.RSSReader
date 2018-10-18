@@ -23,6 +23,17 @@ final public class HttpHandler {
         return result;
     }
 
+    @Nullable
+    public static InputStream GetHTTPInputStream(final URL url) throws IOException {
+        final HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+
+        if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+            return urlConnection.getInputStream();
+        }
+
+        return null;
+    }
+
     private static String getDataFromInputStream(InputStream inputStream) throws IOException {
         final BufferedReader bufferedReaderData = new BufferedReader(
                 new InputStreamReader(

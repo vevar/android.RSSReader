@@ -1,9 +1,16 @@
 package com.axlminyaev.rssreader.repository;
 
 import android.database.Cursor;
+import android.support.annotation.Nullable;
 
+import com.axlminyaev.rssreader.engine.HttpHandler;
+import com.axlminyaev.rssreader.engine.RssParser;
 import com.axlminyaev.rssreader.repository.model.News;
 
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
@@ -64,6 +71,24 @@ public class NewsRepository extends ARepository<News> {
 
     @Override
     public List<News> getAll() {
+        return null;
+    }
+
+    @Nullable
+    public List<News> getNewsFromRemove(String from){
+
+        try {
+            final InputStream inputStream = HttpHandler.GetHTTPInputStream(new URL(from));
+            return new RssParser().parse(inputStream);
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (XmlPullParserException e) {
+            e.printStackTrace();
+        }
+
         return null;
     }
 }

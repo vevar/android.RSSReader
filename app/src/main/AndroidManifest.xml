@@ -23,8 +23,6 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".service.NewsService" />
-
     </application>
 
 </manifest>
