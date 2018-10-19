@@ -1,4 +1,4 @@
-package com.axlminyaev.rssreader.engine;
+package com.axlminyaev.rssreader.core;
 
 import android.support.annotation.Nullable;
 
@@ -30,7 +30,6 @@ final public class HttpHandler {
         if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
             return urlConnection.getInputStream();
         }
-
         return null;
     }
 

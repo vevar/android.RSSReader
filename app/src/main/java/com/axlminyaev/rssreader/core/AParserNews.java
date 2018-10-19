@@ -1,6 +1,6 @@
-package com.axlminyaev.rssreader.engine;
+package com.axlminyaev.rssreader.core;
 
-import com.axlminyaev.rssreader.repository.model.News;
+import com.axlminyaev.rssreader.model.News;
 
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -15,8 +15,14 @@ public abstract class AParserNews {
     static final String TAG_LINK = "link";
     static final String TAG_DESCRIPTION = "description";
     static final String TAG_PUB_DATE = "pubDate";
+    static final String TAG_IMAGE = "image";
+    static final String TAG_CONTENT = "content";
 
-    abstract public List<News> parse(String text);
+    static final String ATTR_MEDIUM = "medium";
+    static final String ATTR_URL = "url";
+    static final String ATTR_HREF = "href";
+
+    static final String VALUE_IMAGE = "image";
 
     abstract public List<News> parse(InputStream inputStream) throws XmlPullParserException, IOException;
 }

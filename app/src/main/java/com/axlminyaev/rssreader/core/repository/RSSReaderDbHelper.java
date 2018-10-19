@@ -1,12 +1,12 @@
-package com.axlminyaev.rssreader.repository;
+package com.axlminyaev.rssreader.core.repository;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.Nullable;
 
-import com.axlminyaev.rssreader.repository.model.News;
-import com.axlminyaev.rssreader.repository.model.SourceNews;
+import com.axlminyaev.rssreader.model.News;
+import com.axlminyaev.rssreader.model.SourceNews;
 
 final class RSSReaderDbHelper extends SQLiteOpenHelper {
 

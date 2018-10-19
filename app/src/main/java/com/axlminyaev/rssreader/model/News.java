@@ -1,4 +1,4 @@
-package com.axlminyaev.rssreader.repository.model;
+package com.axlminyaev.rssreader.model;
 
 import android.provider.BaseColumns;
 
@@ -27,8 +27,10 @@ final public class News {
     private URL urlImage;
     private Date pubDate;
 
-    public News(){
-
+    public News(String title, String description, URL url) {
+        this.title = title;
+        this.description = description;
+        this.url = url;
     }
 
     public News(String title, String description, URL url, URL urlImage, Date pubDate) {

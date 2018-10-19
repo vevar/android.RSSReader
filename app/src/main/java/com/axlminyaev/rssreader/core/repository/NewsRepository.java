@@ -1,11 +1,11 @@
-package com.axlminyaev.rssreader.repository;
+package com.axlminyaev.rssreader.core.repository;
 
 import android.database.Cursor;
 import android.support.annotation.Nullable;
 
-import com.axlminyaev.rssreader.engine.HttpHandler;
-import com.axlminyaev.rssreader.engine.RssParser;
-import com.axlminyaev.rssreader.repository.model.News;
+import com.axlminyaev.rssreader.core.HttpHandler;
+import com.axlminyaev.rssreader.core.RssParser;
+import com.axlminyaev.rssreader.model.News;
 
 import org.xmlpull.v1.XmlPullParserException;
 

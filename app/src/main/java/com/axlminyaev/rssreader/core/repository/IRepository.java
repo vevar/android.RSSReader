@@ -1,4 +1,4 @@
-package com.axlminyaev.rssreader.repository;
+package com.axlminyaev.rssreader.core.repository;
 
 import java.util.List;
 

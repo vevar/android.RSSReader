@@ -1,10 +1,10 @@
-package com.axlminyaev.rssreader.repository;
+package com.axlminyaev.rssreader.core.repository;
 
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.annotation.Nullable;
 
-import com.axlminyaev.rssreader.repository.model.SourceNews;
+import com.axlminyaev.rssreader.model.SourceNews;
 
 import java.net.MalformedURLException;
 import java.net.URL;

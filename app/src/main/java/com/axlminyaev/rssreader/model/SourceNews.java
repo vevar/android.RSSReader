@@ -1,4 +1,4 @@
-package com.axlminyaev.rssreader.repository.model;
+package com.axlminyaev.rssreader.model;
 
 import android.provider.BaseColumns;
 

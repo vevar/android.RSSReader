@@ -1,0 +1,80 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:media="http://search.yahoo.com/mrss/"
+    xmlns:nyt="http://www.nytimes.com/namespaces/rss/2.0" version="2.0">
+    <channel>
+        <title>NYT > Science</title>
+        <link>
+            https://www.nytimes.com/section/science?partner=rss&emc=rss
+        </link>
+        <atom:link href="http://www.nytimes.com/services/xml/rss/nyt/Science.xml" rel="self"
+            type="application/rss+xml" />
+        <description />
+        <language>en-us</language>
+        <copyright>Copyright 2018 The New York Times Company</copyright>
+        <lastBuildDate>Wed, 17 Oct 2018 13:37:34 GMT</lastBuildDate>
+        <item>
+            <title>Rescuing Sea Turtles From Fishermen’s Nets</title>
+            <link>
+                https://www.nytimes.com/2018/10/15/science/sea-turtles-endangered-fishing.html?partner=rss&emc=rss
+            </link>
+            <guid isPermaLink="true">
+                https://www.nytimes.com/2018/10/15/science/sea-turtles-endangered-fishing.html
+            </guid>
+            <atom:link
+                href="https://www.nytimes.com/2018/10/15/science/sea-turtles-endangered-fishing.html?partner=rss&emc=rss"
+                rel="standout" />
+            <media:content height="151" medium="image"
+                url="https://static01.nyt.com/images/2018/10/16/science/16SCI-TURTLES1/16SCI-TURTLES1-moth.jpg"
+                width="151" />
+            <media:description>
+                A green sea turtle trapped in a gill net. Scientists estimate the global green
+                turtle population has declined 50 to 70 percent since 1900.
+            </media:description>
+            <media:credit>Jeff Rotman/Science Source</media:credit>
+            <description>
+                An organization on the coast of Kenya tries to persuade local residents to help
+                return the trapped reptiles to the ocean, rather than sell their meat and shells for
+                a living.
+            </description>
+            <dc:creator>AMY YEE</dc:creator>
+            <pubDate>Mon, 15 Oct 2018 18:11:48 GMT</pubDate>
+            <category domain="http://www.nytimes.com/namespaces/keywords/des">Turtles and
+                Tortoises
+            </category>
+            <category domain="http://www.nytimes.com/namespaces/keywords/des">Oceans and Seas
+            </category>
+
+        </item>
+        <item>
+            <title>
+                Trilobites: City Rats Eat Meat. Country Rats Eat What They Can.
+            </title>
+            <link>
+                https://www.nytimes.com/2018/10/16/science/rats-cities-meat.html?partner=rss&emc=rss
+            </link>
+            <guid isPermaLink="true">
+                https://www.nytimes.com/2018/10/16/science/rats-cities-meat.html
+            </guid>
+            <atom:link
+                href="https://www.nytimes.com/2018/10/16/science/rats-cities-meat.html?partner=rss&emc=rss"
+                rel="standout" />
+            <media:content height="151" medium="image"
+                url="https://static01.nyt.com/images/2018/10/17/science/17TB-RATS/17TB-RATS-moth.jpg"
+                width="151" />
+            <media:description>
+                An analysis of the remains of urban brown rats from the 19th century revealed that
+                their diets were much richer than rural rats.
+            </media:description>
+            <media:credit>Ernie Janes/Alamy Stock Photo</media:credit>
+            <description>
+                New research on rats suggests that Aesop was on to something in his ancient fable,
+                “The Town Mouse and the Country Mouse.”
+            </description>
+            <dc:creator>DOUGLAS QUENQUA</dc:creator>
+            <pubDate>Tue, 16 Oct 2018 23:00:03 GMT</pubDate>
+            <category domain="http://www.nytimes.com/namespaces/keywords/des">Rats</category>
+            <category domain="http://www.nytimes.com/namespaces/keywords/des">Bones</category>
+
+        </item>
+    </channel>
+</rss>
