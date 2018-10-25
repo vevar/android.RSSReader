@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.Nullable;
 
 import com.alxminyaev.rssreader.model.news.News;
-import com.alxminyaev.rssreader.model.SourceNews;
+import com.alxminyaev.rssreader.model.source_news.SourceNews;
 
 final class RSSReaderDbHelper extends SQLiteOpenHelper {
 

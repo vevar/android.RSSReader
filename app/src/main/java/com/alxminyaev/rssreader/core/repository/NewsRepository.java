@@ -5,8 +5,8 @@ import android.support.annotation.Nullable;
 
 import com.alxminyaev.rssreader.core.HttpHandler;
 import com.alxminyaev.rssreader.core.RSSParser;
-import com.alxminyaev.rssreader.model.SourceNews;
-import com.alxminyaev.rssreader.model.Topic;
+import com.alxminyaev.rssreader.model.source_news.SourceNews;
+import com.alxminyaev.rssreader.model.topic.Topic;
 import com.alxminyaev.rssreader.model.news.News;
 
 import org.jetbrains.annotations.NotNull;
@@ -28,11 +28,11 @@ import java.util.Set;
 
 final public class NewsRepository extends ARepository<News> {
 
-    private HashMap<Topic, Set<SourceNews>> topicSourceNews;
+    private HashMap<Topic, Set<SourceNews>> topicSourceNews = null;
 
     private RSSParser rssParser;
 
-
+    @NotNull
     private RSSParser getRSSParser() {
         if (rssParser == null) {
             rssParser = new RSSParser();
@@ -41,6 +41,22 @@ final public class NewsRepository extends ARepository<News> {
         return rssParser;
     }
 
+    @NotNull
+    private HashMap<Topic, Set<SourceNews>> getMapTopicSourceNews() {
+        if (topicSourceNews == null) {
+            topicSourceNews = new HashMap<>();
+            final List<Topic> listTopics = new TopicRepository().getAll();
+            if (listTopics != null) {
+                for (Topic topic : listTopics) {
+                    topicSourceNews.put(topic, topic.getSourceNews());
+                }
+            }
+        }
+
+        return topicSourceNews;
+    }
+
+    @Nullable
     @Override
     protected News getElementByCursor(final Cursor cursor) {
 
@@ -94,7 +110,7 @@ final public class NewsRepository extends ARepository<News> {
     public List<News> getAll() {
         final List<News> resultListNews = new ArrayList<>();
 
-        for (Map.Entry<Topic, Set<SourceNews>> entrySourceNews : topicSourceNews.entrySet()) {
+        for (Map.Entry<Topic, Set<SourceNews>> entrySourceNews : getMapTopicSourceNews().entrySet()) {
             Topic topic = entrySourceNews.getKey();
             List<News> listByTopic = getByTopic(topic);
 

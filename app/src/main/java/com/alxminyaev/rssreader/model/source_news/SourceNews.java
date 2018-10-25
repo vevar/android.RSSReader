@@ -1,16 +1,20 @@
-package com.alxminyaev.rssreader.model;
+package com.alxminyaev.rssreader.model.source_news;
 
 import android.provider.BaseColumns;
 
+import com.alxminyaev.rssreader.model.topic.Topic;
+
 import java.net.URL;
+import java.util.Set;
 
 final public class SourceNews {
 
     final private int id;
     final private String title;
     final private URL url;
+    private Set<Topic> topic;
 
-    public final static class Contract implements BaseColumns{
+    public final static class Contract implements BaseColumns {
 
         public static final String TABLE_NAME = "source_news";
 

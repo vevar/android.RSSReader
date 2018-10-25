@@ -1,6 +1,6 @@
 package com.alxminyaev.rssreader.core.service;
 
-import com.alxminyaev.rssreader.model.SourceNews;
+import com.alxminyaev.rssreader.model.source_news.SourceNews;
 
 final class NewsTaskBuilder{
 

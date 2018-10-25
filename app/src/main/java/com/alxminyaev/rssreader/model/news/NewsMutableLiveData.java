@@ -4,6 +4,6 @@ import android.arch.lifecycle.MutableLiveData;
 
 import java.util.List;
 
-public final class NewsMutableLiveData extends MutableLiveData<List<News>> {
+final class NewsMutableLiveData extends MutableLiveData<List<News>> {
 
 }

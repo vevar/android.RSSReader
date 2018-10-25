@@ -4,7 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.annotation.Nullable;
 
-import com.alxminyaev.rssreader.model.SourceNews;
+import com.alxminyaev.rssreader.model.source_news.SourceNews;
 
 import java.net.MalformedURLException;
 import java.net.URL;
