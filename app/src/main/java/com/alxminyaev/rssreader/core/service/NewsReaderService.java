@@ -20,7 +20,7 @@ public final class NewsReaderService extends Service {
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
+    public int onStartCommand(final Intent intent, final int flags, final int startId) {
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -31,7 +31,7 @@ public final class NewsReaderService extends Service {
 
     @Nullable
     @Override
-    public IBinder onBind(Intent intent) {
+    public IBinder onBind(final Intent intent) {
         return null;
     }
 
@@ -40,7 +40,7 @@ public final class NewsReaderService extends Service {
         return new NewsRepository().getAll();
     }
 
-    public static Intent getIntentGetAllNews(Activity activity) {
+    public static Intent getIntentGetAllNews(final Activity activity) {
         return new Intent(activity, NewsReaderService.class);
     }
 
