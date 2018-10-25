@@ -20,10 +20,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class RssParser extends AParserNews {
+final public class RssParser extends AParserNews {
 
     @Override
-    public List<News> parse(InputStream inputStream) throws XmlPullParserException, IOException {
+    public  List<News> parse(final InputStream inputStream) throws XmlPullParserException, IOException {
         XmlPullParser parser = Xml.newPullParser();
         parser.setInput(new InputStreamReader(inputStream));
 
@@ -48,7 +48,7 @@ public class RssParser extends AParserNews {
     }
 
     @Nullable
-    private News parseNews(XmlPullParser parser) {
+    private News parseNews(final XmlPullParser parser) {
         String title = null, description = null;
         URL url = null, urlImage = null;
         Date pubDate = null;
@@ -113,7 +113,7 @@ public class RssParser extends AParserNews {
         }
     }
 
-    private URL getUrlContentImage(XmlPullParser parser) throws MalformedURLException {
+    private URL getUrlContentImage(final XmlPullParser parser) throws MalformedURLException {
         if (parser.getAttributeValue(null, ATTR_MEDIUM).equals(VALUE_IMAGE)) {
             return new URL(parser.getAttributeValue(null, ATTR_URL));
         }
@@ -121,7 +121,7 @@ public class RssParser extends AParserNews {
         return null;
     }
 
-    private URL getUrlImage(XmlPullParser parser) throws IOException, XmlPullParserException {
+    private URL getUrlImage(final XmlPullParser parser) throws IOException, XmlPullParserException {
         int eventType;
         String tagType;
 
@@ -133,7 +133,7 @@ public class RssParser extends AParserNews {
         return new URL(parser.nextText());
     }
 
-    private Date getDate(XmlPullParser parser) throws IOException, XmlPullParserException, ParseException {
+    private Date getDate(final XmlPullParser parser) throws IOException, XmlPullParserException, ParseException {
         String PATTERN_PARSE_DATE = "EEE, d MMM yyyy HH:mm:ss z";
         final SimpleDateFormat simpleDateFormat =
                 new SimpleDateFormat(PATTERN_PARSE_DATE, Locale.getDefault());
@@ -141,7 +141,7 @@ public class RssParser extends AParserNews {
         return simpleDateFormat.parse(parser.nextText());
     }
 
-    private String getAttrLink(XmlPullParser parser) throws IOException, XmlPullParserException {
+    private String getAttrLink(final XmlPullParser parser) throws IOException, XmlPullParserException {
         String result;
 
         if (parser.getAttributeCount() > 0) {

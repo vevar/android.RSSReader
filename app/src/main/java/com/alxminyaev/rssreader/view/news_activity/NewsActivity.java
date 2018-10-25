@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
 import com.alxminyaev.rssreader.R;
+import com.alxminyaev.rssreader.core.repository.NewsRepository;
 import com.alxminyaev.rssreader.core.service.NewsReaderService;
 import com.alxminyaev.rssreader.model.news.News;
 import com.alxminyaev.rssreader.model.news.NewsViewModel;
@@ -21,7 +22,10 @@ final public class NewsActivity extends AppCompatActivity {
 
     private NewsViewModel newsViewModel;
 
+    private NewsReaderService newsReaderService;
+
     final private NewsScreen newsScreen;
+
 
     public NewsActivity() {
         newsScreen = new NewsScreen(this);
@@ -54,7 +58,10 @@ final public class NewsActivity extends AppCompatActivity {
         ServiceConnection serviceConnection = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
-
+                if (service != null && name.getClassName()
+                        .equals(NewsReaderService.class.getName())) {
+                    newsReaderService = ((NewsReaderService.NewsBinder) service).getService();
+                }
             }
 
             @Override
@@ -68,7 +75,12 @@ final public class NewsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
+        new Runnable() {
+            @Override
+            public void run() {
+                newsViewModel.setListNews(new NewsRepository().getAll());
+            }
+        };
     }
 
     @Override

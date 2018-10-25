@@ -24,5 +24,5 @@ public abstract class AParserNews {
 
     static final String VALUE_IMAGE = "image";
 
-    abstract public List<News> parse(InputStream inputStream) throws XmlPullParserException, IOException;
+    abstract public List<News> parse(final InputStream inputStream) throws XmlPullParserException, IOException;
 }

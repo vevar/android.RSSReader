@@ -14,20 +14,13 @@ import java.util.List;
 
 public final class NewsReaderService extends Service {
 
-    private Thread newsHandler;
-
-    private List<News> newsList;
-
     @Override
     public void onCreate() {
         super.onCreate();
-
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        newsHandler = new Thread();
-
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -42,28 +35,20 @@ public final class NewsReaderService extends Service {
         return null;
     }
 
-    public static Intent getIntentGetAllNews(Activity activity){
+
+    public List<News> getAllNews(){
+        return new NewsRepository().getAll();
+    }
+
+    public static Intent getIntentGetAllNews(Activity activity) {
         return new Intent(activity, NewsReaderService.class);
     }
 
-    final private class NewsBinder extends Binder {
+    final public class NewsBinder extends Binder {
 
-        public NewsReaderService getService(){
+        public NewsReaderService getService() {
             return NewsReaderService.this;
         }
 
-    }
-
-    final class NewsServiceThread extends Thread{
-        private List<News> listNews;
-
-         public List<News> getAllNews(){
-             return listNews;
-         }
-
-        @Override
-        public void run() {
-             listNews = new NewsRepository().getAll();
-        }
     }
 }

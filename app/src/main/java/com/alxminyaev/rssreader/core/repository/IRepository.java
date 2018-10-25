@@ -1,5 +1,6 @@
 package com.alxminyaev.rssreader.core.repository;
 
+import java.io.IOException;
 import java.util.List;
 
 interface IRepository <T>{
@@ -10,5 +11,5 @@ interface IRepository <T>{
 
     T getById(int id);
 
-    List<T> getAll();
+    List<T> getAll() throws IOException;
 }
