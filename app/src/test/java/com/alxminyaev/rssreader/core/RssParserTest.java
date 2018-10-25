@@ -32,7 +32,7 @@ public class RssParserTest {
             "                their diets were much richer than rural rats.";
     private String NEWS_TWO_PUB_DATE = "Tue, 16 Oct 2018 23:00:03 GMT";
 
-    private RssParser parser = new RssParser();
+    private RSSParser parser = new RSSParser();
 
     @Test
     public void testParse() throws MalformedURLException {

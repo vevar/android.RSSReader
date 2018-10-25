@@ -34,7 +34,7 @@ final public class SourceNewsRepository extends ARepository<SourceNews> {
     }
 
     @Override
-    public void remove(int id) {
+    public void remove(final int id) {
         final RSSReaderDbHelper rssReaderDbHelper = new RSSReaderDbHelper(null);
 
         rssReaderDbHelper.getWritableDatabase()
@@ -49,7 +49,7 @@ final public class SourceNewsRepository extends ARepository<SourceNews> {
 
     @Nullable
     @Override
-    public SourceNews getById(int id) {
+    public SourceNews getById(final int id) {
         final RSSReaderDbHelper rssReaderDbHelper = new RSSReaderDbHelper(null);
 
         final Cursor cursor = rssReaderDbHelper.getWritableDatabase().query(

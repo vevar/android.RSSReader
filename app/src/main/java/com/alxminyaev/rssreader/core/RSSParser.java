@@ -20,7 +20,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-final public class RssParser extends AParserNews {
+final public class RSSParser extends AParserNews {
 
     @Override
     public  List<News> parse(final InputStream inputStream) throws XmlPullParserException, IOException {

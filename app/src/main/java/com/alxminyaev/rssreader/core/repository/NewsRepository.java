@@ -4,7 +4,7 @@ import android.database.Cursor;
 import android.support.annotation.Nullable;
 
 import com.alxminyaev.rssreader.core.HttpHandler;
-import com.alxminyaev.rssreader.core.RssParser;
+import com.alxminyaev.rssreader.core.RSSParser;
 import com.alxminyaev.rssreader.model.SourceNews;
 import com.alxminyaev.rssreader.model.Topic;
 import com.alxminyaev.rssreader.model.news.News;
@@ -30,7 +30,16 @@ final public class NewsRepository extends ARepository<News> {
 
     private HashMap<Topic, Set<SourceNews>> topicSourceNews;
 
-    private RssParser rssParser;
+    private RSSParser rssParser;
+
+
+    private RSSParser getRSSParser() {
+        if (rssParser == null) {
+            rssParser = new RSSParser();
+        }
+
+        return rssParser;
+    }
 
     @Override
     protected News getElementByCursor(final Cursor cursor) {
@@ -106,7 +115,7 @@ final public class NewsRepository extends ARepository<News> {
         try {
             inputStream = HttpHandler.GetHTTPInputStream(sourceNews.getUrl());
             if (inputStream != null) {
-                parsedNewsList = rssParser.parse(inputStream);
+                parsedNewsList = getRSSParser().parse(inputStream);
                 inputStream.close();
             }
         } catch (IOException e) {
