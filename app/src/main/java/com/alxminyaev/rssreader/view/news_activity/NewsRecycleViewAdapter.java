@@ -27,7 +27,6 @@ final class NewsRecycleViewAdapter extends RecyclerView.Adapter<NewsRecycleViewA
         this.newsList = newsList;
     }
 
-
     @NonNull
     @Override
     public NewsViewHolder onCreateViewHolder(@NonNull final ViewGroup viewGroup, int i) {
@@ -68,7 +67,6 @@ final class NewsRecycleViewAdapter extends RecyclerView.Adapter<NewsRecycleViewA
             super(itemView);
             titleView = itemView.findViewById(R.id.titleCard);
             description = itemView.findViewById(R.id.descriptionCard);
-            //TODO Is this need???
             if (titleView == null || description == null) {
                 throw new IncorrectItemsOfViewException();
             }

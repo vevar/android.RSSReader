@@ -12,6 +12,10 @@ final public class NewsViewModel extends ViewModel {
 
     private NewsMutableLiveData listNews;
 
+    NewsViewModel(){
+        listNews = new NewsMutableLiveData();
+    }
+
     public List<News> getListNews() {
         if (listNews == null){
             listNews = new NewsMutableLiveData();

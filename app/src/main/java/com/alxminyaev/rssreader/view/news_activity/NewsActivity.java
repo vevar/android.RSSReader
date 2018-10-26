@@ -11,7 +11,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
 import com.alxminyaev.rssreader.R;
-import com.alxminyaev.rssreader.core.repository.NewsRepository;
 import com.alxminyaev.rssreader.core.service.NewsReaderService;
 import com.alxminyaev.rssreader.model.news.News;
 import com.alxminyaev.rssreader.model.news.NewsViewModel;
@@ -43,7 +42,7 @@ final public class NewsActivity extends AppCompatActivity {
 
             @Override
             public void onChanged(@Nullable final List<News> listNews) {
-                if (listNews != null){
+                if (listNews != null) {
                     newsScreen.updateListNews(listNews);
                     String rec = "asd";
                     int a = 0;
@@ -71,7 +70,7 @@ final public class NewsActivity extends AppCompatActivity {
 
             @Override
             public void onServiceDisconnected(ComponentName name) {
-
+                newsReaderService = null;
             }
         };
         bindService(intentGetAllNews, serviceConnection, BIND_AUTO_CREATE);
@@ -80,13 +79,17 @@ final public class NewsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
         Runnable task = new Runnable() {
             @Override
             public void run() {
-                final List<News> newsList = new NewsRepository().getAll();
-                if (newsList != null){
-                    newsViewModel.setListNews(newsList);
+                if (newsReaderService != null) {
+                    final List<News> newsList = newsReaderService.getAllNews();
+                    if (newsList != null) {
+                        newsViewModel.setListNews(newsList);
+                    }
                 }
+
             }
         };
         Thread thread = new Thread(task);

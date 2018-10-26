@@ -2,10 +2,10 @@ package com.alxminyaev.rssreader.core;
 
 import android.support.annotation.Nullable;
 
-import java.io.BufferedReader;
+import com.alxminyaev.rssreader.exception.core.IncorrectProtocolInURL;
+
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -13,45 +13,22 @@ final public class HttpHandler {
 
     private final static String PROTOCOL = "http";
 
-    @Nullable
-    public static String GetHTTPData(final URL url) throws IOException {
-        final HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-        String result = null;
-
-        if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-            result = getDataFromInputStream(urlConnection.getInputStream());
-        }
-
-        return result;
-    }
+    private final static int TIMEOUT_MILLISECONDS = 5000;
 
     @Nullable
-    public static InputStream GetHTTPInputStream(final URL url) throws IOException {
+    public static InputStream GetHTTPInputStream(final URL url) throws IOException, IncorrectProtocolInURL {
+
         if (PROTOCOL.equals(url.getProtocol())) {
             final HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 
+            urlConnection.setConnectTimeout(TIMEOUT_MILLISECONDS);
             if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 return urlConnection.getInputStream();
             }
-        }else {
-
+        } else {
+            throw new IncorrectProtocolInURL();
         }
         return null;
     }
 
-    private static String getDataFromInputStream(InputStream inputStream) throws IOException {
-        final BufferedReader bufferedReaderData = new BufferedReader(
-                new InputStreamReader(
-                        inputStream
-                ));
-
-        final StringBuilder stringBuilderData = new StringBuilder();
-
-        String line;
-        while ((line = bufferedReaderData.readLine()) != null) {
-            stringBuilderData.append(line);
-        }
-
-        return stringBuilderData.toString();
-    }
 }

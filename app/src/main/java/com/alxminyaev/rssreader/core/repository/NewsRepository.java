@@ -2,9 +2,12 @@ package com.alxminyaev.rssreader.core.repository;
 
 import android.database.Cursor;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.alxminyaev.rssreader.core.HttpHandler;
 import com.alxminyaev.rssreader.core.RSSParser;
+import com.alxminyaev.rssreader.exception.core.CoreException;
+import com.alxminyaev.rssreader.exception.core.IncorrectProtocolInURL;
 import com.alxminyaev.rssreader.model.source_news.SourceNews;
 import com.alxminyaev.rssreader.model.topic.Topic;
 import com.alxminyaev.rssreader.model.news.News;
@@ -81,10 +84,10 @@ final public class NewsRepository extends ARepository<News> {
 
                     );
         } catch (ParseException e) {
-            e.printStackTrace();
+            Log.e(CoreException.TAG, e.getMessage(), e);
             return null;
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            Log.e(CoreException.TAG, e.getMessage(), e);
             return null;
         }
 
@@ -135,9 +138,11 @@ final public class NewsRepository extends ARepository<News> {
                 inputStream.close();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e(CoreException.TAG, e.getMessage(), e);
         } catch (XmlPullParserException e) {
-            e.printStackTrace();
+            Log.e(CoreException.TAG, e.getMessage(), e);
+        } catch (IncorrectProtocolInURL e) {
+            Log.e(CoreException.TAG, e.getMessage(), e);
         }
 
         return parsedNewsList;
