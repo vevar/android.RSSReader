@@ -1,4 +1,4 @@
-package com.alxminyaev.rssreader.view.news_activity;
+package com.alxminyaev.rssreader.view.news_screen;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
