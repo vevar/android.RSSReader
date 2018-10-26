@@ -11,6 +11,8 @@ import java.net.URL;
 
 final public class HttpHandler {
 
+    private final static String PROTOCOL = "http";
+
     @Nullable
     public static String GetHTTPData(final URL url) throws IOException {
         final HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
@@ -25,10 +27,14 @@ final public class HttpHandler {
 
     @Nullable
     public static InputStream GetHTTPInputStream(final URL url) throws IOException {
-        final HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+        if (PROTOCOL.equals(url.getProtocol())) {
+            final HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 
-        if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-            return urlConnection.getInputStream();
+            if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                return urlConnection.getInputStream();
+            }
+        }else {
+
         }
         return null;
     }

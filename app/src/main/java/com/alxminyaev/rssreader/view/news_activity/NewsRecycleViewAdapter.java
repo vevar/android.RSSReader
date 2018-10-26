@@ -1,5 +1,6 @@
 package com.alxminyaev.rssreader.view.news_activity;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +14,8 @@ import com.alxminyaev.rssreader.R;
 import com.alxminyaev.rssreader.exception.view.IncorrectItemsOfViewException;
 import com.alxminyaev.rssreader.exception.view.ViewException;
 import com.alxminyaev.rssreader.model.news.News;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -31,7 +34,12 @@ final class NewsRecycleViewAdapter extends RecyclerView.Adapter<NewsRecycleViewA
         CardView cardView = (CardView) LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.card, viewGroup, false);
 
-        return new NewsViewHolder(cardView);
+        try {
+            return new NewsViewHolder(cardView);
+        } catch (IncorrectItemsOfViewException e) {
+            Log.e(ViewException.TAG, e.getMessage());
+            return new NewsViewHolder(viewGroup.getContext());
+        }
     }
 
     @Override
@@ -42,7 +50,9 @@ final class NewsRecycleViewAdapter extends RecyclerView.Adapter<NewsRecycleViewA
         newsViewHolder.description.setText(news.getDescription());
     }
 
-
+    void setNewsList(@NotNull final List<News> newsList) {
+        this.newsList = newsList;
+    }
 
     @Override
     public int getItemCount() {
@@ -54,20 +64,20 @@ final class NewsRecycleViewAdapter extends RecyclerView.Adapter<NewsRecycleViewA
         private TextView titleView;
         private TextView description;
 
-        NewsViewHolder(@NonNull final View itemView) {
+        NewsViewHolder(@NonNull final View itemView) throws IncorrectItemsOfViewException {
             super(itemView);
             titleView = itemView.findViewById(R.id.titleCard);
             description = itemView.findViewById(R.id.descriptionCard);
             //TODO Is this need???
             if (titleView == null || description == null) {
-                try {
-                    throw new IncorrectItemsOfViewException(
-                            IncorrectItemsOfViewException.MESSAGE_INCORRECT_ITEMS_OF_VIEW);
-                } catch (IncorrectItemsOfViewException e) {
-                    Log.e(ViewException.TAG, e.getMessage());
-                }
+                throw new IncorrectItemsOfViewException();
             }
         }
 
+        NewsViewHolder(@NonNull final Context context) {
+            super(new View(context));
+        }
     }
+
+
 }

@@ -43,10 +43,15 @@ final public class NewsActivity extends AppCompatActivity {
 
             @Override
             public void onChanged(@Nullable final List<News> listNews) {
-
+                if (listNews != null){
+                    newsScreen.updateListNews(listNews);
+                    String rec = "asd";
+                    int a = 0;
+                }
             }
         };
-        newsViewModel.getListNews().observe(this, newsObserver);
+
+        newsViewModel.setObserver(this, newsObserver);
     }
 
 
@@ -75,12 +80,18 @@ final public class NewsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        new Runnable() {
+        Runnable task = new Runnable() {
             @Override
             public void run() {
-                newsViewModel.setListNews(new NewsRepository().getAll());
+                final List<News> newsList = new NewsRepository().getAll();
+                if (newsList != null){
+                    newsViewModel.setListNews(newsList);
+                }
             }
         };
+        Thread thread = new Thread(task);
+        thread.start();
+
     }
 
     @Override

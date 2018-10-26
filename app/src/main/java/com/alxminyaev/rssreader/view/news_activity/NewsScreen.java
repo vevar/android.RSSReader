@@ -16,27 +16,28 @@ final class NewsScreen {
 
     private Activity activity;
 
-    private RecyclerView newsRecycleView;
+    private NewsRecycleViewAdapter newsRecycleViewAdapter;
 
 
     NewsScreen(@NotNull final Activity activity) {
         this.activity = activity;
     }
 
-    void createScreen(){
+    void createScreen() {
         setupNewsRecycleView();
     }
 
-    private void setupNewsRecycleView(){
-        newsRecycleView = activity.findViewById(R.id.listNews);
+    private void setupNewsRecycleView() {
+        RecyclerView newsRecycleView = activity.findViewById(R.id.listNews);
         newsRecycleView.setHasFixedSize(true);
         newsRecycleView.setLayoutManager(new LinearLayoutManager(activity));
-        //TODO need get list of news
-        final List<News> newsList = new ArrayList<>();
-        NewsRecycleViewAdapter newsRecycleViewAdapter = new NewsRecycleViewAdapter(newsList);
+        newsRecycleViewAdapter = new NewsRecycleViewAdapter(new ArrayList<News>());
         newsRecycleView.setAdapter(newsRecycleViewAdapter);
     }
 
 
-
+    void updateListNews(@NotNull final List<News> listNews) {
+        newsRecycleViewAdapter.setNewsList(listNews);
+        newsRecycleViewAdapter.notify();
+    }
 }
