@@ -5,7 +5,6 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
 
 import com.alxminyaev.rssreader.core.repository.NewsRepository;
 import com.alxminyaev.rssreader.model.news.News;
@@ -29,10 +28,9 @@ public final class NewsReaderService extends Service {
         super.onDestroy();
     }
 
-    @Nullable
     @Override
     public IBinder onBind(final Intent intent) {
-        return null;
+        return new NewsBinder();
     }
 
 

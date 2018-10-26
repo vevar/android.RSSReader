@@ -23,11 +23,9 @@ final public class NewsActivity extends AppCompatActivity {
 
     private NewsReaderService newsReaderService;
 
-    final private NewsScreen newsScreen;
-
+    private NewsScreen newsScreen;
 
     public NewsActivity() {
-        newsScreen = new NewsScreen(this);
     }
 
     @Override
@@ -35,7 +33,7 @@ final public class NewsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        newsScreen.createScreen();
+        newsScreen = new NewsScreen(this);
 
         newsViewModel = ViewModelProviders.of(this).get(NewsViewModel.class);
         final Observer<List<News>> newsObserver = new Observer<List<News>>() {
@@ -44,8 +42,6 @@ final public class NewsActivity extends AppCompatActivity {
             public void onChanged(@Nullable final List<News> listNews) {
                 if (listNews != null) {
                     newsScreen.updateListNews(listNews);
-                    String rec = "asd";
-                    int a = 0;
                 }
             }
         };
@@ -88,8 +84,8 @@ final public class NewsActivity extends AppCompatActivity {
                     if (newsList != null) {
                         newsViewModel.setListNews(newsList);
                     }
-                }
 
+                }
             }
         };
         Thread thread = new Thread(task);

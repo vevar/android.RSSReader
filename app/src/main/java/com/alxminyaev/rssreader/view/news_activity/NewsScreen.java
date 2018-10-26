@@ -14,27 +14,17 @@ import java.util.List;
 
 final class NewsScreen {
 
-    private Activity activity;
-
-    private NewsRecycleViewAdapter newsRecycleViewAdapter;
-
+    final private NewsRecycleViewAdapter newsRecycleViewAdapter;
 
     NewsScreen(@NotNull final Activity activity) {
-        this.activity = activity;
-    }
 
-    void createScreen() {
-        setupNewsRecycleView();
-    }
-
-    private void setupNewsRecycleView() {
         RecyclerView newsRecycleView = activity.findViewById(R.id.listNews);
         newsRecycleView.setHasFixedSize(true);
         newsRecycleView.setLayoutManager(new LinearLayoutManager(activity));
         newsRecycleViewAdapter = new NewsRecycleViewAdapter(new ArrayList<News>());
         newsRecycleView.setAdapter(newsRecycleViewAdapter);
-    }
 
+    }
 
     void updateListNews(@NotNull final List<News> listNews) {
         newsRecycleViewAdapter.setNewsList(listNews);
