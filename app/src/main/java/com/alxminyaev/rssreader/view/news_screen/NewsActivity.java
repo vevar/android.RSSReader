@@ -71,7 +71,7 @@ final public class NewsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
+        // TODO Как лучше вот это реализовать?
         Runnable task = () -> {
             if (newsReaderService != null) {
                 final List<News> newsList = newsReaderService.getAllNews();
