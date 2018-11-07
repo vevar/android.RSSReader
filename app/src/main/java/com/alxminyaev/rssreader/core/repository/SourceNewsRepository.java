@@ -92,7 +92,7 @@ final public class SourceNewsRepository extends ARepository<SourceNews> {
                 sourceNews = getElementByCursor(cursor);
                 sourceNewsList.add(sourceNews);
             } while (cursor.moveToNext());
-
+            //TODO finally
             rssReaderDbHelper.close();
 
             return sourceNewsList;

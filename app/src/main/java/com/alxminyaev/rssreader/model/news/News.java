@@ -60,26 +60,14 @@ final public class News {
         this.pubDate = pubDate;
     }
 
-    public News(int id, String title, String description, URL url, URL urlImage, Date pubDate) {
+    public News(int id, @NotNull final String title, @NotNull final String description,
+                @NotNull final URL url, @NotNull final URL urlImage, @NotNull final Date pubDate) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.url = url;
         this.urlImage = urlImage;
         this.pubDate = pubDate;
-    }
-
-    public News(int id, String title, String description, URL url, URL urlImage, Date pubDate,
-                boolean isReadied, boolean isSaved, File pathImage) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.url = url;
-        this.urlImage = urlImage;
-        this.pubDate = pubDate;
-        this.isReadied = isReadied;
-        this.isSaved = isSaved;
-        this.pathImage = pathImage;
     }
 
     public String getTitle() {
@@ -123,7 +111,7 @@ final public class News {
         return pathImage;
     }
 
-    public void setPathImage(File pathImage) {
+    public void setPathImage(@NotNull final File pathImage) {
         this.pathImage = pathImage;
     }
 

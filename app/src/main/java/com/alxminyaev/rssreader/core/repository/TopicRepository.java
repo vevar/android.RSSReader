@@ -3,8 +3,11 @@ package com.alxminyaev.rssreader.core.repository;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
+import com.alxminyaev.rssreader.model.additional_contracts.ContractSourceNewsManyToManyTopic;
 import com.alxminyaev.rssreader.model.source_news.SourceNews;
 import com.alxminyaev.rssreader.model.topic.Topic;
 
@@ -21,14 +24,13 @@ final public class TopicRepository extends ARepository<Topic> {
         this.context = context;
     }
 
+    @NonNull
     @Override
-    protected Topic getElementByCursor(Cursor cursor) {
+    protected Topic getElementByCursor(@NotNull Cursor cursor) {
         final int indexId = cursor.getColumnIndex(Topic.Contract._ID);
         final int indexName = cursor.getColumnIndex(Topic.Contract.COLUMN_NAME_NAME);
 
         final int topicID = cursor.getInt(indexId);
-
-        //TODO many to many
         final HashSet<SourceNews> sourceNewsSet = getSetSourceNewsByTopicId(topicID);
 
         return new Topic(
@@ -38,46 +40,107 @@ final public class TopicRepository extends ARepository<Topic> {
         );
     }
 
+    @NonNull
     private HashSet<SourceNews> getSetSourceNewsByTopicId(int topicID) {
-        HashSet<SourceNews> sourceNews = new HashSet<>();
+        final HashSet<SourceNews> setSourceNews = new HashSet<>();
+        final SQLiteDatabase readableDatabase = new RSSReaderDbHelper(context).getReadableDatabase();
+        Cursor cursor = null;
+        try {
+            cursor = readableDatabase
+                    .query(
+                            ContractSourceNewsManyToManyTopic.TABLE_NAME,
+                            new String[]{ContractSourceNewsManyToManyTopic.COLUMN_NAME_SOURCE_NEWS_ID},
+                            ContractSourceNewsManyToManyTopic.COLUMN_NAME_TOPIC_ID + " = ?",
+                            new String[]{String.valueOf(topicID)},
+                            null, null, null
+                    );
+            if (cursor.moveToFirst()) {
 
-        Cursor cursor = new RSSReaderDbHelper(context).getReadableDatabase()
-                .query(
-                        RSSReaderDbHelper.ContractSourceNewsManyToManyTopic.TABLE_NAME,
-                        new String[]{RSSReaderDbHelper.ContractSourceNewsManyToManyTopic.COLUMN_NAME_SOURCE_NEWS_ID},
-                        RSSReaderDbHelper.ContractSourceNewsManyToManyTopic.COLUMN_NAME_TOPIC_ID + " = ?",
-                        new String[]{String.valueOf(topicID)},
-                        null, null, null
-                );
+                int sourceNewsIdIndex = cursor.getColumnIndex(
+                        ContractSourceNewsManyToManyTopic.COLUMN_NAME_SOURCE_NEWS_ID);
+                final SourceNewsRepository sourceNewsRepository = new SourceNewsRepository(context);
+                do {
+                    final int idSourceNews = cursor.getInt(sourceNewsIdIndex);
+                    final SourceNews sourceNews = sourceNewsRepository.getById(idSourceNews);
+                    setSourceNews.add(sourceNews);
+                } while (cursor.moveToNext());
+            }
 
-        return null;
+            return setSourceNews;
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            readableDatabase.close();
+        }
     }
 
 
     @Override
-    public void save(Topic element) {
+    public void save(@NotNull Topic topic) {
         final RSSReaderDbHelper rssReaderDbHelper = new RSSReaderDbHelper(context);
+        final SQLiteDatabase writableDatabase = rssReaderDbHelper.getWritableDatabase();
 
-        final ContentValues contentValues = new ContentValues();
-        contentValues.put(Topic.Contract.COLUMN_NAME_NAME, element.getName());
+        try {
+            writableDatabase.beginTransaction();
 
-        //TODO save to table SourceNew many to many Topic
+            saveToTopicTable(writableDatabase, topic);
+            saveToSourceNewsManyToManyTopic(writableDatabase, topic);
 
-        rssReaderDbHelper.getWritableDatabase()
-                .insert(Topic.Contract.TABLE_NAME, null, contentValues);
+            writableDatabase.setTransactionSuccessful();
+        } finally {
+            writableDatabase.endTransaction();
+            rssReaderDbHelper.close();
+        }
+    }
 
-        rssReaderDbHelper.close();
+    private void saveToSourceNewsManyToManyTopic(@NotNull final SQLiteDatabase writableDatabase,
+                                                 @NotNull final Topic topic) {
+        final ContentValues contentTopicIdSourceId = new ContentValues();
+
+        contentTopicIdSourceId
+                .put(
+                        ContractSourceNewsManyToManyTopic.COLUMN_NAME_TOPIC_ID,
+                        topic.getId()
+                );
+
+        for (SourceNews sourceNews : topic.getSourceNews()) {
+            contentTopicIdSourceId.
+                    put(
+                            ContractSourceNewsManyToManyTopic.COLUMN_NAME_TOPIC_ID,
+                            sourceNews.getId()
+                    );
+
+            writableDatabase
+                    .insert(
+                            ContractSourceNewsManyToManyTopic.TABLE_NAME,
+                            null,
+                            contentTopicIdSourceId
+                    );
+        }
+    }
+
+    private void saveToTopicTable(@NotNull final SQLiteDatabase writableDatabase, @NotNull final Topic topic) {
+        final ContentValues contentTopic = new ContentValues();
+        contentTopic.put(Topic.Contract.COLUMN_NAME_NAME, topic.getName());
+        writableDatabase
+                .insert(Topic.Contract.TABLE_NAME, null, contentTopic);
+
     }
 
     @Override
     public void remove(int id) {
         final RSSReaderDbHelper rssReaderDbHelper = new RSSReaderDbHelper(context);
 
-        rssReaderDbHelper.getWritableDatabase()
-                .delete(
-                        Topic.Contract.TABLE_NAME,
-                        Topic.Contract._ID + " = ?", new String[]{String.valueOf(id)}
-                );
+        try {
+            rssReaderDbHelper.getWritableDatabase()
+                    .delete(
+                            Topic.Contract.TABLE_NAME,
+                            Topic.Contract._ID + " = ?", new String[]{String.valueOf(id)}
+                    );
+        } finally {
+            rssReaderDbHelper.close();
+        }
     }
 
     @NonNull
@@ -85,34 +148,43 @@ final public class TopicRepository extends ARepository<Topic> {
     public Topic getById(int id) {
         final RSSReaderDbHelper rssReaderDbHelper = new RSSReaderDbHelper(context);
 
-        final Cursor cursor = rssReaderDbHelper.getReadableDatabase()
-                .query(
-                        Topic.Contract.TABLE_NAME, null,
-                        Topic.Contract._ID + " = ?", new String[]{String.valueOf(id)},
-                        null, null, null);
-        return getElementByCursor(cursor);
+        try {
+            final Cursor cursor = rssReaderDbHelper.getReadableDatabase()
+                    .query(
+                            Topic.Contract.TABLE_NAME, null,
+                            Topic.Contract._ID + " = ?", new String[]{String.valueOf(id)},
+                            null, null, null);
+            return getElementByCursor(cursor);
+        } finally {
+            rssReaderDbHelper.close();
+        }
     }
 
+    @Nullable
     @Override
     public ArrayList<Topic> getAll() {
 
-        RSSReaderDbHelper rssReaderDbHelper = new RSSReaderDbHelper(context);
-        Cursor cursor = rssReaderDbHelper.getReadableDatabase().query(
-                Topic.Contract.TABLE_NAME, null, null,
-                null, null, null, null);
+        final RSSReaderDbHelper rssReaderDbHelper = new RSSReaderDbHelper(context);
+        try {
+            final Cursor cursor = rssReaderDbHelper.getReadableDatabase().query(
+                    Topic.Contract.TABLE_NAME, null, null,
+                    null, null, null, null);
 
-        if (cursor.moveToFirst()) {
-            final ArrayList<Topic> listTopics = new ArrayList<>();
-            Topic topic;
-            do {
-                topic = getElementByCursor(cursor);
-                listTopics.add(topic);
-            } while (cursor.moveToNext());
+            if (cursor.moveToFirst()) {
+                final ArrayList<Topic> listTopics = new ArrayList<>();
+                Topic topic;
+                do {
+                    topic = getElementByCursor(cursor);
+                    listTopics.add(topic);
+                } while (cursor.moveToNext());
 
-            return listTopics;
+                return listTopics;
+            }
+
+            return null;
+        } finally {
+            rssReaderDbHelper.close();
         }
-
-        return null;
     }
 
 

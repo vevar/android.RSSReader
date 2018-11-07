@@ -4,6 +4,8 @@ import android.provider.BaseColumns;
 
 import com.alxminyaev.rssreader.model.source_news.SourceNews;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,7 +24,8 @@ final public class Topic {
         this.name = name;
     }
 
-    public Topic(final int id, final String name, final HashSet<SourceNews> sourceNews) {
+    public Topic(final int id, @NotNull final String name,
+                 final @NotNull HashSet<SourceNews> sourceNews) {
         this.id = id;
         this.name = name;
         this.sourceNews = sourceNews;
@@ -34,5 +37,9 @@ final public class Topic {
 
     public HashSet<SourceNews> getSourceNews() {
         return sourceNews;
+    }
+
+    public int getId() {
+        return id;
     }
 }

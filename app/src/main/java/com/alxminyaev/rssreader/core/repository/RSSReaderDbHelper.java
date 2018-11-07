@@ -3,9 +3,9 @@ package com.alxminyaev.rssreader.core.repository;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.provider.BaseColumns;
 import android.support.annotation.Nullable;
 
+import com.alxminyaev.rssreader.model.additional_contracts.ContractSourceNewsManyToManyTopic;
 import com.alxminyaev.rssreader.model.news.News;
 import com.alxminyaev.rssreader.model.source_news.SourceNews;
 import com.alxminyaev.rssreader.model.topic.Topic;
@@ -16,15 +16,6 @@ final class RSSReaderDbHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 2;
     private static final String DATABASE_NAME = "RSSReader.db";
 
-    public static final class ContractSourceNewsManyToManyTopic {
-        private ContractSourceNewsManyToManyTopic() {
-        }
-
-        public static final String TABLE_NAME = "source_news_many_to_many_topic";
-
-        public static final String COLUMN_NAME_SOURCE_NEWS_ID = "id_source_news";
-        public static final String COLUMN_NAME_TOPIC_ID = "id_topic";
-    }
 
     private static final String SQL_CREATE_NEWS =
             "CREATE TABLE " + News.Contract.TABLE_NAME + "(" +

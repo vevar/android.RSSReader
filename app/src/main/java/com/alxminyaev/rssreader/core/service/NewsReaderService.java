@@ -49,7 +49,7 @@ public final class NewsReaderService extends Service {
         Thread loaderNewsThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                newsArrayList = new NewsRepository().getAll();
+                newsArrayList = new NewsRepository(getApplicationContext()).getAll();
             }
         });
         loaderNewsThread.start();
