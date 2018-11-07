@@ -18,7 +18,7 @@ final class NewsScreen {
 
     NewsScreen(@NotNull final Activity activity) {
 
-        RecyclerView newsRecycleView = activity.findViewById(R.id.listNews);
+        RecyclerView newsRecycleView = activity.findViewById(R.id.setNews);
         newsRecycleView.setHasFixedSize(true);
         newsRecycleView.setLayoutManager(new LinearLayoutManager(activity));
         newsRecycleViewAdapter = new NewsRecycleViewAdapter(new ArrayList<News>());

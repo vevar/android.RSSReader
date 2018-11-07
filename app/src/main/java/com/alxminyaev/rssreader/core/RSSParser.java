@@ -23,11 +23,11 @@ import java.util.Locale;
 final public class RSSParser extends AParserNews {
 
     @Override
-    public  List<News> parse(final InputStream inputStream) throws XmlPullParserException, IOException {
-        XmlPullParser parser = Xml.newPullParser();
+    public  ArrayList<News> parse(final InputStream inputStream) throws XmlPullParserException, IOException {
+        final XmlPullParser parser = Xml.newPullParser();
         parser.setInput(new InputStreamReader(inputStream));
 
-        List<News> listNews = new ArrayList<>();
+        final ArrayList<News> listNews = new ArrayList<>();
 
         int eventType = parser.getEventType();
         String tagType;
@@ -134,7 +134,7 @@ final public class RSSParser extends AParserNews {
     }
 
     private Date getDate(final XmlPullParser parser) throws IOException, XmlPullParserException, ParseException {
-        String PATTERN_PARSE_DATE = "EEE, d MMM yyyy HH:mm:ss z";
+        final String PATTERN_PARSE_DATE = "EEE, d MMM yyyy HH:mm:ss z";
         final SimpleDateFormat simpleDateFormat =
                 new SimpleDateFormat(PATTERN_PARSE_DATE, Locale.getDefault());
 

@@ -5,14 +5,16 @@ import android.provider.BaseColumns;
 import com.alxminyaev.rssreader.model.topic.Topic;
 
 import java.net.URL;
+import java.util.HashSet;
 import java.util.Set;
 
 final public class SourceNews {
 
-    final private int id;
-    final private String title;
-    final private URL url;
-    private Set<Topic> topic;
+    private int id;
+    private String title;
+    private URL url;
+
+    private HashSet<Topic> topic;
 
     public final static class Contract implements BaseColumns {
 
@@ -26,6 +28,12 @@ final public class SourceNews {
         this.id = id;
         this.title = title;
         this.url = url;
+    }
+
+    public SourceNews(String title, URL url, HashSet<Topic> topic) {
+        this.title = title;
+        this.url = url;
+        this.topic = topic;
     }
 
     public int getId() {

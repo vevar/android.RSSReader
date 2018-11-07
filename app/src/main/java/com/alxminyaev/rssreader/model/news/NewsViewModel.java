@@ -1,34 +1,43 @@
 package com.alxminyaev.rssreader.model.news;
 
-import android.arch.lifecycle.LifecycleOwner;
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModel;
+import com.alxminyaev.rssreader.model.Observer;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
+import java.util.ArrayList;
+import java.util.HashSet;
 
-final public class NewsViewModel extends ViewModel {
+final public class NewsViewModel {
 
-    private NewsMutableLiveData listNews;
+    private HashSet<News> setNews;
 
-    NewsViewModel(){
-        listNews = new NewsMutableLiveData();
+    private ArrayList<Observer> listObservers;
+
+    NewsViewModel() {
+        this.setNews = new HashSet<>();
+        this.listObservers = new ArrayList<>();
     }
 
-    public List<News> getListNews() {
-        if (listNews == null){
-            listNews = new NewsMutableLiveData();
+    public HashSet<News> getSetNews() {
+        return setNews;
+    }
+
+    public void setSetNews(@NotNull final HashSet<News> setNews) {
+        this.setNews = setNews;
+        notifyAllObservers();
+    }
+
+    public void addObserver(@NotNull final Observer observer) {
+        listObservers.add(observer);
+    }
+
+    public void deleteObserver(int index) {
+        listObservers.remove(index);
+    }
+
+    private void notifyAllObservers() {
+        for (Observer observer : listObservers) {
+            observer.update();
         }
-
-        return listNews.getValue();
-    }
-
-    public void setListNews(@NotNull final List<News> listNews) {
-        this.listNews.setValue(listNews);
-    }
-
-    public void setObserver(@NotNull final LifecycleOwner owner, @NotNull final Observer<List<News>> observer){
-        listNews.observe(owner, observer);
     }
 }

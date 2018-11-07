@@ -1,19 +1,16 @@
 package com.alxminyaev.rssreader.view.news_screen;
 
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 
 import com.alxminyaev.rssreader.R;
+import com.alxminyaev.rssreader.core.repository.SourceNewsRepository;
 import com.alxminyaev.rssreader.core.service.NewsReaderService;
-import com.alxminyaev.rssreader.model.news.News;
 import com.alxminyaev.rssreader.model.news.NewsViewModel;
+import com.alxminyaev.rssreader.model.source_news.SourceNews;
 
+import java.util.ArrayList;
 import java.util.List;
 
 final public class NewsActivity extends AppCompatActivity {
@@ -34,60 +31,29 @@ final public class NewsActivity extends AppCompatActivity {
 
         newsScreen = new NewsScreen(this);
 
-        newsViewModel = ViewModelProviders.of(this).get(NewsViewModel.class);
-        final Observer<List<News>> newsObserver = (listNews) -> {
-            if (listNews != null) {
-                newsScreen.updateListNews(listNews);
-            }
-        };
+        Intent intentStartService = NewsReaderService.getIntentStartService(this);
+        startService(intentStartService);
 
-        newsViewModel.setObserver(this, newsObserver);
+        SourceNewsRepository sourceNewsRepository = new SourceNewsRepository(this);
+        ArrayList<SourceNews> all = sourceNewsRepository.getAll();
     }
-
 
     @Override
     protected void onStart() {
         super.onStart();
-        Intent intentGetAllNews = NewsReaderService.getIntentGetAllNews(this);
 
-        ServiceConnection serviceConnection = new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
-                if (service != null && name.getClassName()
-                        .equals(NewsReaderService.class.getName())) {
-                    newsReaderService = ((NewsReaderService.NewsBinder) service).getService();
-                }
-            }
-
-            @Override
-            public void onServiceDisconnected(ComponentName name) {
-                newsReaderService = null;
-            }
-        };
-
-        bindService(intentGetAllNews, serviceConnection, BIND_AUTO_CREATE);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        // TODO Как лучше вот это реализовать?
-        Runnable task = () -> {
-            if (newsReaderService != null) {
-                final List<News> newsList = newsReaderService.getAllNews();
-                if (newsList != null) {
-                    newsViewModel.setListNews(newsList);
-                }
-            }
-        };
-        Thread thread = new Thread(task);
-        thread.start();
 
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+
     }
 
     @Override

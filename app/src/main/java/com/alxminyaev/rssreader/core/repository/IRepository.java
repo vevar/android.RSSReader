@@ -4,7 +4,7 @@ import java.util.List;
 
 interface IRepository <T>{
 
-    void add(T element);
+    void save(T element);
 
     void remove(int id);
 

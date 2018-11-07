@@ -1,24 +1,23 @@
 package com.alxminyaev.rssreader.model.source_news;
 
 import android.arch.lifecycle.ViewModel;
+import android.util.ArraySet;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Observer;
 
 final public class SourceNewsViewModel extends ViewModel {
 
-    private SourceNewsMutableLiveData sourcesNews;
+    private ArraySet<SourceNews> sourcesNews;
 
-    public SourceNewsMutableLiveData getSourcesNews() {
-        if (sourcesNews == null) {
-            sourcesNews = new SourceNewsMutableLiveData();
-        }
-
+    public ArraySet<SourceNews> getSourcesNews() {
         return sourcesNews;
     }
 
-    public void setSourcesNews(@NotNull final List<SourceNews> sourcesNews) {
-        this.sourcesNews.setValue(sourcesNews);
+    public void setSourcesNews(@NotNull final ArraySet<SourceNews> sourcesNews) {
+        this.sourcesNews = sourcesNews;
     }
 }
