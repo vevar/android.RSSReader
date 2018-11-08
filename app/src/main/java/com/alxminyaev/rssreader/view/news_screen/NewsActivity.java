@@ -24,6 +24,7 @@ final public class NewsActivity extends AppCompatActivity {
     public NewsActivity() {
     }
 
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,14 +35,14 @@ final public class NewsActivity extends AppCompatActivity {
         Intent intentStartService = NewsReaderService.getIntentStartService(this);
         startService(intentStartService);
 
-        SourceNewsRepository sourceNewsRepository = new SourceNewsRepository(this);
-        ArrayList<SourceNews> all = sourceNewsRepository.getAll();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
+        final Intent intentStartLoadNews = NewsReaderService.getIntentStartLoadNews();
+        sendBroadcast(intentStartLoadNews);
     }
 
     @Override

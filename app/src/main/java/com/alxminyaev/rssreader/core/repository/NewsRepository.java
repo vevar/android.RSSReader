@@ -214,7 +214,7 @@ final public class NewsRepository extends ARepository<News> {
         }
     }
 
-    @Nullable
+    @NotNull
     @Override
     public ArrayList<News> getAll() {
         final ArrayList<News> resultListNews = new ArrayList<>();
@@ -228,7 +228,7 @@ final public class NewsRepository extends ARepository<News> {
             }
         }
 
-        return resultListNews.size() > 0 ? resultListNews : null;
+        return resultListNews;
     }
 
     @Nullable
