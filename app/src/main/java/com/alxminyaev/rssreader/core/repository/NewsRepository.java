@@ -7,8 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.alxminyaev.rssreader.core.HttpHandler;
-import com.alxminyaev.rssreader.core.RSSParser;
+import com.alxminyaev.rssreader.core.network.HttpHandler;
+import com.alxminyaev.rssreader.core.parser.RSSParser;
 import com.alxminyaev.rssreader.exception.core.CoreException;
 import com.alxminyaev.rssreader.exception.core.IncorrectProtocolInURL;
 import com.alxminyaev.rssreader.model.news.News;
@@ -31,18 +31,22 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 final public class NewsRepository extends ARepository<News> {
 
     private final Context context;
 
-    public NewsRepository(Context context) {
-        this.context = context;
-    }
+    private final int AMOUNT_THREAD = 4;
 
     private HashMap<Topic, HashSet<SourceNews>> topicSourceNews = null;
 
     private RSSParser rssParser;
+
+    public NewsRepository(Context context) {
+        this.context = context;
+    }
 
     @NotNull
     private RSSParser getRSSParser() {
@@ -129,7 +133,6 @@ final public class NewsRepository extends ARepository<News> {
         contentNews.put(News.Contract.COLUMN_NAME_URL, element.getUrl().toString());
         contentNews.put(News.Contract.COLUMN_NAME_PUB_DATE, element.getPubDate().toString());
         contentNews.put(News.Contract.COLUMN_NAME_URL_IMAGE, element.getUrlImage().toString());
-        contentNews.put(News.Contract.COLUMN_NAME_IS_FAVORITE, element.isReadied());
         contentNews.put(News.Contract.COLUMN_NAME_IS_SAVED, element.isSaved());
         if (element.isSaved()) {
             contentNews.put(News.Contract.COLUMN_NAME_PATH_IMAGE_IN_FILE_SYSTEM, element.getPathImage().toString());
@@ -161,7 +164,6 @@ final public class NewsRepository extends ARepository<News> {
                 contentNews.put(News.Contract.COLUMN_NAME_URL, news.getUrl().toString());
                 contentNews.put(News.Contract.COLUMN_NAME_PUB_DATE, news.getPubDate().toString());
                 contentNews.put(News.Contract.COLUMN_NAME_URL_IMAGE, news.getUrlImage().toString());
-                contentNews.put(News.Contract.COLUMN_NAME_IS_FAVORITE, news.isReadied());
                 contentNews.put(News.Contract.COLUMN_NAME_IS_SAVED, news.isSaved());
                 if (news.isSaved()) {
                     contentNews.put(News.Contract.COLUMN_NAME_PATH_IMAGE_IN_FILE_SYSTEM, news.getPathImage().toString());
@@ -247,6 +249,8 @@ final public class NewsRepository extends ARepository<News> {
             Log.e(CoreException.TAG, e.getMessage(), e);
         } catch (IncorrectProtocolInURL e) {
             Log.e(CoreException.TAG, e.getMessage(), e);
+        } catch (ParseException e) {
+            Log.e(CoreException.TAG, e.getMessage(), e);
         } finally {
             try {
                 if (inputStream != null) {
@@ -275,5 +279,27 @@ final public class NewsRepository extends ARepository<News> {
         }
 
         return resultListNews.size() > 0 ? resultListNews : null;
+    }
+
+
+    public void loadAllNewsToDataBase() {
+        final ExecutorService executorService = Executors.newFixedThreadPool(AMOUNT_THREAD);
+        final SourceNewsRepository sourceNewsRepository = new SourceNewsRepository(context);
+        final ArrayList<SourceNews> listSourceNews = sourceNewsRepository.getAll();
+
+        if (listSourceNews != null) {
+            for (final SourceNews sourceNews : listSourceNews) {
+                executorService.submit(new Runnable() {
+                    @Override
+                    public void run() {
+                        final ArrayList<News> listNewsBySourceNews = getBySourceNews(sourceNews);
+                        if (listNewsBySourceNews != null) {
+                            saveMany(listNewsBySourceNews);
+                        }
+                    }
+                });
+
+            }
+        }
     }
 }

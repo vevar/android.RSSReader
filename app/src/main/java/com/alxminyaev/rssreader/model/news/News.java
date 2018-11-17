@@ -3,7 +3,6 @@ package com.alxminyaev.rssreader.model.news;
 import android.provider.BaseColumns;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.net.URL;
@@ -24,7 +23,6 @@ final public class News {
         public static final String COLUMN_NAME_URL_IMAGE = "image";
         public static final String COLUMN_NAME_PUB_DATE = "pub_date";
         public static final String COLUMN_NAME_IS_READIED = "is_readied";
-        public static final String COLUMN_NAME_IS_FAVORITE = "is_favorite";
         public static final String COLUMN_NAME_PATH_IMAGE_IN_FILE_SYSTEM = "path_image";
         public static final String COLUMN_NAME_IS_SAVED = "is_saved";
     }
@@ -35,6 +33,7 @@ final public class News {
     private URL url;
     private URL urlImage;
     private Date pubDate;
+
 
     private boolean isReadied;
     private boolean isSaved;
@@ -52,7 +51,8 @@ final public class News {
         this.url = url;
     }
 
-    public News(String title, String description, URL url, URL urlImage, Date pubDate) {
+    public News(@NotNull final String title, @NotNull final String description, @NotNull final URL url,
+                @NotNull final URL urlImage, @NotNull final Date pubDate) {
         this.title = title;
         this.description = description;
         this.url = url;
@@ -98,7 +98,6 @@ final public class News {
         isReadied = readied;
     }
 
-
     public boolean isSaved() {
         return isSaved;
     }
@@ -113,6 +112,14 @@ final public class News {
 
     public void setPathImage(@NotNull final File pathImage) {
         this.pathImage = pathImage;
+    }
+
+    public void setUrlImage(@NotNull URL urlImage) {
+        this.urlImage = urlImage;
+    }
+
+    public void setPubDate(@NotNull Date pubDate) {
+        this.pubDate = pubDate;
     }
 
     public boolean equals(@NotNull News news) {

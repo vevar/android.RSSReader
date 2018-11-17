@@ -1,4 +1,4 @@
-package com.alxminyaev.rssreader.core;
+package com.alxminyaev.rssreader.core.network;
 
 import android.support.annotation.Nullable;
 import android.util.Log;

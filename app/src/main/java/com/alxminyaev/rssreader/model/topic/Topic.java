@@ -7,7 +7,6 @@ import com.alxminyaev.rssreader.model.source_news.SourceNews;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
-import java.util.Set;
 
 final public class Topic {
 

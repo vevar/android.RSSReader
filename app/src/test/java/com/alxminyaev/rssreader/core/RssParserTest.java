@@ -1,7 +1,12 @@
 package com.alxminyaev.rssreader.core;
 
+import android.util.Log;
+
+import com.alxminyaev.rssreader.core.parser.RSSParser;
+import com.alxminyaev.rssreader.exception.core.CoreException;
 import com.alxminyaev.rssreader.model.news.News;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -10,6 +15,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,16 +38,21 @@ public class RssParserTest {
             "                their diets were much richer than rural rats.";
     private String NEWS_TWO_PUB_DATE = "Tue, 16 Oct 2018 23:00:03 GMT";
 
-    private RSSParser parser = new RSSParser();
+    private RSSParser parser;
+
+    @Before
+    public void createRSSParser() {
+        parser = new RSSParser();
+    }
 
     @Test
     public void testParse() throws MalformedURLException {
         File file = new File(PATH_TO_FILE);
 
-        List<News> expectedNews = new ArrayList<>();
+        final List<News> expectedNews = new ArrayList<>();
 
         News newsOne = new News(NEWS_ONE_TITLE, NEWS_ONE_DESCRIPTION, new URL(NEWS_ONE_LINK), null, null);
-        News newsTwo = new News(NEWS_TWO_TITLE, NEWS_TWO_DESCRIPTION, new URL(NEWS_TWO_LINK), null, null );
+        News newsTwo = new News(NEWS_TWO_TITLE, NEWS_TWO_DESCRIPTION, new URL(NEWS_TWO_LINK), null, null);
 
         expectedNews.add(newsOne);
         expectedNews.add(newsTwo);
@@ -49,12 +60,13 @@ public class RssParserTest {
 
         try {
             List<News> actualNews = parser.parse(new FileInputStream(file));
-            actualNews.get(0);
-            assertEquals(4, 2 + 2);
+            assertEquals(expectedNews, actualNews);
         } catch (XmlPullParserException e) {
-            e.printStackTrace();
+            Log.e(CoreException.TAG, e.getMessage(), e);
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e(CoreException.TAG, e.getMessage(), e);
+        } catch (ParseException e) {
+            Log.e(CoreException.TAG, e.getMessage(), e);
         }
     }
 }

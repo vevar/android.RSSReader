@@ -1,10 +1,13 @@
 package com.alxminyaev.rssreader.core.repository;
 
 import android.content.Context;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
+import com.alxminyaev.rssreader.core.repository.exception.DataBaseException;
 import com.alxminyaev.rssreader.model.additional_contracts.ContractSourceNewsManyToManyTopic;
 import com.alxminyaev.rssreader.model.news.News;
 import com.alxminyaev.rssreader.model.source_news.SourceNews;
@@ -12,14 +15,13 @@ import com.alxminyaev.rssreader.model.topic.Topic;
 
 final class RSSReaderDbHelper extends SQLiteOpenHelper {
 
-
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "RSSReader.db";
 
 
     private static final String SQL_CREATE_NEWS =
             "CREATE TABLE " + News.Contract.TABLE_NAME + "(" +
-                    News.Contract._ID + " INTEGER PRIMARY KEY," +
+                    News.Contract._ID + " INTEGER PRIMARY KEY UNIQUE," +
                     News.Contract.COLUMN_NAME_TITLE + " TEXT," +
                     News.Contract.COLUMN_NAME_DESCRIPTION + " TEXT," +
                     News.Contract.COLUMN_NAME_URL + " TEXT," +
@@ -36,9 +38,10 @@ final class RSSReaderDbHelper extends SQLiteOpenHelper {
 
     private static final String SQL_CREATE_SOURCE_NEWS =
             "CREATE TABLE " + SourceNews.Contract.TABLE_NAME + "(" +
-                    SourceNews.Contract._ID + " INTEGER PRIMARY KEY," +
-                    SourceNews.Contract.COLUMN_NAME_TITLE + " TEXT," +
-                    SourceNews.Contract.COLUMN_NAME_URL + " TEXT" +
+                    SourceNews.Contract._ID + " INTEGER PRIMARY KEY NOT NULL UNIQUE," +
+                    SourceNews.Contract.COLUMN_NAME_TITLE + " TEXT NOT NULL UNIQUE, " +
+                    SourceNews.Contract.COLUMN_NAME_URL + " TEXT NOT NULL UNIQUE," +
+                    SourceNews.Contract.COLUMN_NAME_LAST_BUILD_DATE + " TEXT" +
                     ")";
 
     private static final String SQL_DELETE_SOURCE_NEWS =
@@ -68,25 +71,34 @@ final class RSSReaderDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(final SQLiteDatabase db) {
-        db.execSQL(SQL_CREATE_NEWS);
-        db.execSQL(SQL_CREATE_SOURCE_NEWS);
-        db.execSQL(SQL_CREATE_TOPIC);
-        db.execSQL(SQL_CREATE_SOURCE_NEWS_MANY_TO_MANY_TOPIC);
+        try {
+            db.execSQL(SQL_CREATE_NEWS);
+            db.execSQL(SQL_CREATE_SOURCE_NEWS);
+            db.execSQL(SQL_CREATE_TOPIC);
+            db.execSQL(SQL_CREATE_SOURCE_NEWS_MANY_TO_MANY_TOPIC);
+        } catch (SQLException e) {
+            Log.e(DataBaseException.TAG, e.getMessage(), e);
+        }
     }
 
     @Override
     public void onUpgrade(final SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL(SQL_DELETE_NEWS);
-        db.execSQL(SQL_CREATE_NEWS);
 
-        db.execSQL(SQL_DELETE_SOURCE_NEWS);
-        db.execSQL(SQL_CREATE_SOURCE_NEWS);
+        try {
+            db.execSQL(SQL_DELETE_NEWS);
+            db.execSQL(SQL_CREATE_NEWS);
 
-        db.execSQL(SQL_DELETE_TOPIC);
-        db.execSQL(SQL_CREATE_TOPIC);
+            db.execSQL(SQL_DELETE_SOURCE_NEWS);
+            db.execSQL(SQL_CREATE_SOURCE_NEWS);
 
-        db.execSQL(SQL_DELETE_SOURCE_NEWS_MANY_TO_MANY_TOPIC);
-        db.execSQL(SQL_CREATE_SOURCE_NEWS_MANY_TO_MANY_TOPIC);
+            db.execSQL(SQL_DELETE_TOPIC);
+            db.execSQL(SQL_CREATE_TOPIC);
+
+            db.execSQL(SQL_DELETE_SOURCE_NEWS_MANY_TO_MANY_TOPIC);
+            db.execSQL(SQL_CREATE_SOURCE_NEWS_MANY_TO_MANY_TOPIC);
+        } catch (SQLException e) {
+            Log.e(DataBaseException.TAG, e.getMessage(), e);
+        }
     }
 
 }

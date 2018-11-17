@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="width_image_source_item">45dp</dimen>
+    <dimen name="height_image_source_item">45dp</dimen>
+    <dimen name="width_button_delete_line_item">40dp</dimen>
+    <dimen name="height_button_delete_line_item">40dp</dimen>
+    <dimen name="m_margin">5dp</dimen>
+    <dimen name="width_source_line_item">270dp</dimen>
+    <dimen name="m_radius">12dp</dimen>
+
+</resources>

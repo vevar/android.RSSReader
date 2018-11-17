@@ -4,7 +4,9 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
+import com.alxminyaev.rssreader.exception.core.CoreException;
 import com.alxminyaev.rssreader.model.source_news.SourceNews;
 
 import org.jetbrains.annotations.NotNull;
@@ -22,36 +24,44 @@ final public class SourceNewsRepository extends ARepository<SourceNews> {
     }
 
     @Override
-    public void save(final SourceNews sourceNews) {
+    public void save(@NotNull final SourceNews sourceNews) {
         final ContentValues contentSourceNews = new ContentValues();
 
         contentSourceNews.put(SourceNews.Contract.COLUMN_NAME_TITLE, sourceNews.getTitle());
         contentSourceNews.put(SourceNews.Contract.COLUMN_NAME_URL, sourceNews.getUrl().toString());
+        if (sourceNews.getLastBuildDate() != null) {
+            contentSourceNews.put(SourceNews.Contract.COLUMN_NAME_LAST_BUILD_DATE,
+                    sourceNews.getLastBuildDate().toString());
+        }
 
         final RSSReaderDbHelper rssReaderDbHelper = new RSSReaderDbHelper(context);
-
-        rssReaderDbHelper.getWritableDatabase()
-                .insert(
-                        SourceNews.Contract.TABLE_NAME,
-                        null,
-                        contentSourceNews
-                );
-
-        rssReaderDbHelper.close();
+        try {
+            rssReaderDbHelper.getWritableDatabase()
+                    .insert(
+                            SourceNews.Contract.TABLE_NAME,
+                            null,
+                            contentSourceNews
+                    );
+        } finally {
+            rssReaderDbHelper.close();
+        }
     }
 
     @Override
     public void remove(final int id) {
         final RSSReaderDbHelper rssReaderDbHelper = new RSSReaderDbHelper(context);
+        try {
+            rssReaderDbHelper.getWritableDatabase()
+                    .delete(
+                            SourceNews.Contract.TABLE_NAME,
+                            SourceNews.Contract._ID + " = ?",
+                            new String[]{Integer.toString(id)}
+                    );
 
-        rssReaderDbHelper.getWritableDatabase()
-                .delete(
-                        SourceNews.Contract.TABLE_NAME,
-                        SourceNews.Contract._ID + " = ?",
-                        new String[]{Integer.toString(id)}
-                );
+        } finally {
+            rssReaderDbHelper.close();
+        }
 
-        rssReaderDbHelper.close();
     }
 
     @Nullable
@@ -59,17 +69,20 @@ final public class SourceNewsRepository extends ARepository<SourceNews> {
     public SourceNews getById(final int id) {
         final RSSReaderDbHelper rssReaderDbHelper = new RSSReaderDbHelper(context);
 
-        final Cursor cursor = rssReaderDbHelper.getReadableDatabase().query(
-                SourceNews.Contract.TABLE_NAME, null,
-                SourceNews.Contract._ID + "=?", new String[]{Integer.toString(id)},
-                null, null, null);
+        try {
+            final Cursor cursor = rssReaderDbHelper.getReadableDatabase().query(
+                    SourceNews.Contract.TABLE_NAME, null,
+                    SourceNews.Contract._ID + "=?", new String[]{Integer.toString(id)},
+                    null, null, null);
 
-        rssReaderDbHelper.close();
 
-        if (cursor.moveToFirst()) {
-            return getElementByCursor(cursor);
-        } else {
-            return null;
+            if (cursor.moveToFirst()) {
+                return getElementByCursor(cursor);
+            } else {
+                return null;
+            }
+        } finally {
+            rssReaderDbHelper.close();
         }
     }
 
@@ -78,27 +91,30 @@ final public class SourceNewsRepository extends ARepository<SourceNews> {
     public ArrayList<SourceNews> getAll() {
 
         final RSSReaderDbHelper rssReaderDbHelper = new RSSReaderDbHelper(context);
+        try {
 
-        final Cursor cursor = rssReaderDbHelper.getReadableDatabase().query(
-                SourceNews.Contract.TABLE_NAME, null, null,
-                null, null, null, null);
+            final Cursor cursor = rssReaderDbHelper.getReadableDatabase().query(
+                    SourceNews.Contract.TABLE_NAME, null, null,
+                    null, null, null, null);
 
 
-        if (cursor.moveToFirst()) {
-            final ArrayList<SourceNews> sourceNewsList = new ArrayList<>();
-            SourceNews sourceNews;
+            if (cursor.moveToFirst()) {
+                final ArrayList<SourceNews> sourceNewsList = new ArrayList<>();
+                SourceNews sourceNews;
 
-            do {
-                sourceNews = getElementByCursor(cursor);
-                sourceNewsList.add(sourceNews);
-            } while (cursor.moveToNext());
-            //TODO finally
+                do {
+                    sourceNews = getElementByCursor(cursor);
+                    sourceNewsList.add(sourceNews);
+                } while (cursor.moveToNext());
+
+                return sourceNewsList;
+            }
+
+            return null;
+        } finally {
             rssReaderDbHelper.close();
-
-            return sourceNewsList;
         }
 
-        return null;
     }
 
 
@@ -108,16 +124,19 @@ final public class SourceNewsRepository extends ARepository<SourceNews> {
         final int idIndex = cursor.getColumnIndex(SourceNews.Contract._ID);
         final int titleIndex = cursor.getColumnIndex(SourceNews.Contract.COLUMN_NAME_TITLE);
         final int urlIndex = cursor.getColumnIndex(SourceNews.Contract.COLUMN_NAME_URL);
+        final int lastBuildDateIndex = cursor.getColumnIndex(
+                SourceNews.Contract.COLUMN_NAME_LAST_BUILD_DATE);
 
         try {
             return new SourceNews
                     (
                             cursor.getInt(idIndex),
                             cursor.getString(titleIndex),
-                            new URL(cursor.getString(urlIndex))
+                            new URL(cursor.getString(urlIndex)),
+                            null
                     );
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            Log.e(CoreException.TAG, e.getMessage(), e);
             return null;
         }
     }

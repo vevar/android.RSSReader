@@ -1,4 +1,4 @@
-package com.alxminyaev.rssreader.core;
+package com.alxminyaev.rssreader.core.parser;
 
 import com.alxminyaev.rssreader.model.news.News;
 
@@ -6,6 +6,7 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.ParseException;
 import java.util.List;
 
 public abstract class AParserNews {
@@ -24,5 +25,8 @@ public abstract class AParserNews {
 
     static final String VALUE_IMAGE = "image";
 
-    abstract public List<News> parse(final InputStream inputStream) throws XmlPullParserException, IOException;
+    final String PATTERN_PARSE_DATE = "EEE, d MMM yyyy HH:mm:ss z";
+
+
+    abstract public List<News> parse(final InputStream inputStream) throws XmlPullParserException, IOException, ParseException;
 }

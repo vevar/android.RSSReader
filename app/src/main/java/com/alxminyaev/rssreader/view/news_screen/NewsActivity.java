@@ -5,13 +5,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.alxminyaev.rssreader.R;
-import com.alxminyaev.rssreader.core.repository.SourceNewsRepository;
 import com.alxminyaev.rssreader.core.service.NewsReaderService;
 import com.alxminyaev.rssreader.model.news.NewsViewModel;
-import com.alxminyaev.rssreader.model.source_news.SourceNews;
-
-import java.util.ArrayList;
-import java.util.List;
 
 final public class NewsActivity extends AppCompatActivity {
 
@@ -30,10 +25,11 @@ final public class NewsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        newsScreen = new NewsScreen(this);
+//        newsScreen = new NewsScreen(this);
 
-        Intent intentStartService = NewsReaderService.getIntentStartService(this);
+        final Intent intentStartService = NewsReaderService.getIntentStartService(this);
         startService(intentStartService);
+
 
     }
 
@@ -54,7 +50,6 @@ final public class NewsActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-
     }
 
     @Override
